@@ -1,0 +1,10 @@
+{
+    "name": "Decky Syncthing",
+    "author": "Andrew Augustine <me@azureagst.dev>",
+    "flags": ["debug"],
+    "publish": {
+        "tags": ["syncthing"],
+        "description": "Syncthing frontend for Decky",
+        "image": ""
+    }
+}

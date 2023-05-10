@@ -1,0 +1,3 @@
+# Decky Syncthing
+
+weeee
