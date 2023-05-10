@@ -13,6 +13,10 @@ export class Backend {
         return output.result
     }
 
+    /*
+     * Settings-related calls
+     */
+
     static async getSetting(key: string, defaults: any) {
         var output = await this.callMethod("getSetting", {key, defaults})
         return output
@@ -25,6 +29,20 @@ export class Backend {
 
     static async commitSettings() {
         var output = await this.callMethod("saveSettings")
+        return output
+    }
+
+    /*
+     * SyncThing-related calls
+     */
+
+    static async getStHostAddr() {
+        var output = await this.callMethod("getStHostAddr")
+        return output
+    }
+
+    static async getStApiKey() {
+        var output = await this.callMethod("getStApiKey")
         return output
     }
 }
