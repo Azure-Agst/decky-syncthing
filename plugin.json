@@ -5,6 +5,6 @@
     "publish": {
         "tags": ["syncthing"],
         "description": "Syncthing frontend for Decky",
-        "image": ""
+        "image": "https://opengraph.githubassets.com/1/Azure-Agst/decky-syncthing"
     }
 }
