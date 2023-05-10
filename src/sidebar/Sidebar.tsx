@@ -1,16 +1,23 @@
 import {
-    ServerAPI,
+    Router,
+    ButtonItem,
     PanelSection,
-    PanelSectionRow,
 } from "decky-frontend-lib";
 import { VFC } from "react";
 
-export const Sidebar: VFC<{ serverAPI: ServerAPI }> = ({}) => {
+export const Sidebar: VFC = ({}) => {
     return (
         <PanelSection title="Panel Section">
-            <PanelSectionRow>
-                <div>Hi!</div>
-            </PanelSectionRow>
+            <div>
+                Hi!
+                <ButtonItem
+                    layout="below"
+                    onClick={() => {
+                        Router.CloseSideMenus();
+                        Router.Navigate("/decky-syncthing-settings")
+                    }}
+                >Open Settings</ButtonItem>
+            </div>
         </PanelSection>
     );
 };

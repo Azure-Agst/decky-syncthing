@@ -7,7 +7,9 @@ import { FaShip } from "react-icons/fa";
 
 import { Backend } from "./utils/Backend";
 import { Settings } from "./utils/Settings";
+
 import { Sidebar } from "./sidebar/Sidebar";
+import { SettingsMenu } from "./menu/SettingsMenu";
 
 export default definePlugin((serverApi: ServerAPI) => {
 
@@ -15,13 +17,19 @@ export default definePlugin((serverApi: ServerAPI) => {
     Backend.initBackend(serverApi)
     Settings.loadFromBackend()
 
+    // Register Menus
+    serverApi.routerHook.addRoute("/decky-syncthing-settings", SettingsMenu, {
+        exact: true
+    })
+
     // Return Decky menu entry
     return {
         title: <div className={staticClasses.Title}>SyncThing</div>,
-        content: <Sidebar serverAPI={serverApi} />,
+        content: <Sidebar />,
         icon: <FaShip />,
         onDismount() {
             Settings.saveToBackend()
+            serverApi.routerHook.removeRoute("/decky-syncthing-settings")
         },
     };
 });
