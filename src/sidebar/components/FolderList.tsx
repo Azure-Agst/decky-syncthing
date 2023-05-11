@@ -1,5 +1,6 @@
-import { VFC, useEffect, useRef, useState } from "react";
+import { VFC, useEffect, useState } from "react";
 
+import { FolderCard } from "./FolderCard";
 import { Settings } from "../../utils/Settings";
 import { iStFolder, iStDbStatus, iFolderStatus } from "../../types";
 
@@ -61,24 +62,27 @@ const getAllFolders = async (): Promise<iFolderStatus[]> => {
     } catch (e) {
         return Promise.reject(e)
     }
-    return Promise.reject("An undocumented error has occured!");
 }
 
 export const FolderList: VFC = ({}) => {
 
     const [folderArray, setFolderArray] = useState<iFolderStatus[]>([])
+    const [foldersLoaded, setFoldersLoaded] = useState<boolean>()
 
     const updateFolders = () => {
         getAllFolders().then(result => {
             setFolderArray(result)
+            setFoldersLoaded(true)
         })
     }
 
     useEffect(() => {
 
-        // Start checking status
+        // Initial search
         console.debug(`[SyncThing] Starting Loop!`)
         updateFolders()
+
+        // Set interval
         var loop = setInterval(() => {
             updateFolders()
         }, 1000)
@@ -91,16 +95,26 @@ export const FolderList: VFC = ({}) => {
 
     }, [])
 
+    if (!foldersLoaded) {
+        return (
+            <div style={{ margin: "auto" }}>
+                Loading...
+            </div>
+        )
+    }
+
     if (folderArray.length == 0) {
         return (
-            <div>None!</div>
+            <div style={{ margin: "auto" }}>
+                No folders found!
+            </div>
         )
     }
 
     return (
         <div>
             {folderArray?.map((f) => (
-                <div>Folder: {f.folder.label} - {f.status.state}</div>
+                <FolderCard data={f} />
             ))}
         </div>
     )

@@ -1,13 +1,7 @@
-import {
-    Router,
-    ButtonItem,
-    PanelSection,
-} from "decky-frontend-lib";
 import { VFC, useEffect, useState } from "react";
 
 import { Backend } from "../utils/Backend";
-import { FolderList } from "./components/FolderList";
-
+import { SbMainView, SbNotFoundView, SbNotLoadedView } from "./views";
 
 export const Sidebar: VFC = ({}) => {
 
@@ -22,26 +16,19 @@ export const Sidebar: VFC = ({}) => {
  
     }, [])
 
-    if (stStatus == 0) {
-        return (
-            <div>
-                <PanelSection title="Folders">
-                    <FolderList />
-                </PanelSection>
-                
-                <PanelSection title="Settings">
-                    <ButtonItem
-                        layout="below"
-                        onClick={() => {
-                            Router.CloseSideMenus();
-                            Router.Navigate("/decky-syncthing-settings")
-                        }}
-                    >Open Settings</ButtonItem>
-                </PanelSection>
-            </div>
-        )
-    }
+    // If loaded successfully...
+    if (stStatus == 0) 
+        return (<SbMainView />)
 
+    // If service not loaded...
+    if (stStatus == 3)
+        return (<SbNotLoadedView />)
+
+    // If service not found...
+    if (stStatus == 4)
+        return (<SbNotFoundView />)
+
+    // Default statement
     return (
         <div style={{ margin: "auto" }}>
             <b>Loading...</b>

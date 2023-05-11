@@ -171,10 +171,7 @@ class Plugin:
             return 1
 
         # Start service
-        ret = subprocess.run(
-            ["/usr/bin/systemctl", "--user", "start", "syncthing"])
-        if ret.returncode != 0:
-            return 1
+        await self.startStService(self)
 
         # We're set!
         return 0
@@ -186,13 +183,10 @@ class Plugin:
         if await self.getStStatus(self) == 4:
             return 1
 
-        # Enable service
-        ret = subprocess.run(
-            ["/usr/bin/systemctl", "--user", "stop", "syncthing"])
-        if ret.returncode != 0:
-            return 1
+        # Stop Service
+        await self.stopStService(self)
 
-        # Start service
+        # Disable service
         ret = subprocess.run(
             ["/usr/bin/systemctl", "--user", "disable", "syncthing"])
         if ret.returncode != 0:
@@ -202,4 +196,24 @@ class Plugin:
         os.remove(os.path.join(SYSTEMD_TARGET_DIR, "syncthing.service"))
 
         # We're set!
+        return 0
+
+    async def startStService(self):
+        """Starts SyncThing Service"""
+
+        # Start service
+        ret = subprocess.run(
+            ["/usr/bin/systemctl", "--user", "start", "syncthing"])
+        if ret.returncode != 0:
+            return 1
+        return 0
+
+    async def stopStService(self):
+        """Stops Syncthing Service"""
+
+        # Stop service
+        ret = subprocess.run(
+            ["/usr/bin/systemctl", "--user", "stop", "syncthing"])
+        if ret.returncode != 0:
+            return 1
         return 0
