@@ -1,5 +1,4 @@
-import { PanelSection } from "decky-frontend-lib";
-import { VFC, useEffect, useState } from "react";
+import { VFC, useEffect, useRef, useState } from "react";
 
 import { Settings } from "../../utils/Settings";
 import { iStFolder, iStDbStatus, iFolderStatus } from "../../types";
@@ -38,34 +37,40 @@ const fetchStDbStatus = async (id: string): Promise<iStDbStatus> => {
     return Promise.reject("An undocumented error has occured!");
 }
 
-export const FolderList: VFC = ({}) => {
+const getAllFolders = async (): Promise<iFolderStatus[]> => {
+    try {
 
-    const [folderStatus, setFolderStatus] = useState<iFolderStatus[]>([])
-
-    const updateFolders = () => {
-
-        // Reset folder list
-        setFolderStatus([])
+        // Prep array
+        var folderList: iFolderStatus[] = []
 
         // Fetch all folders
-        fetchStFolders().then(result => {
-            result.forEach((folder) => {
-                console.debug(`[SyncThing] Found folder: ${folder.label}`)
+        var stFolders = await fetchStFolders()
 
-                // For each folder, get DB status
-                fetchStDbStatus(folder.id).then(result => {
-                    console.debug(`[SyncThing] ${folder.label} Status: ${result.state}`)
-
-                    // Now, save each folder and status in list
-                    setFolderStatus(prevFolders => [
-                        ...prevFolders,
-                        {
-                            folder: folder,
-                            status: result
-                        }
-                    ])
-                })
+        // For each folder, get db status
+        for (let stFolder of stFolders) {
+            var stStatus = await fetchStDbStatus(stFolder.id)
+            folderList.push({
+                folder: stFolder,
+                status: stStatus
             })
+        }
+
+        // return formatted array
+        return folderList
+
+    } catch (e) {
+        return Promise.reject(e)
+    }
+    return Promise.reject("An undocumented error has occured!");
+}
+
+export const FolderList: VFC = ({}) => {
+
+    const [folderArray, setFolderArray] = useState<iFolderStatus[]>([])
+
+    const updateFolders = () => {
+        getAllFolders().then(result => {
+            setFolderArray(result)
         })
     }
 
@@ -86,9 +91,15 @@ export const FolderList: VFC = ({}) => {
 
     }, [])
 
+    if (folderArray.length == 0) {
+        return (
+            <div>None!</div>
+        )
+    }
+
     return (
         <div>
-            {folderStatus?.map((f) => (
+            {folderArray?.map((f) => (
                 <div>Folder: {f.folder.label} - {f.status.state}</div>
             ))}
         </div>

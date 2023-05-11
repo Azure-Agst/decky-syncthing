@@ -19,13 +19,16 @@ export const Sidebar: VFC = ({}) => {
         Backend.getStStatus().then(result => {
             setStStatus(result)
         })
-
+ 
     }, [])
 
     if (stStatus == 0) {
         return (
             <div>
-                <FolderList />
+                <PanelSection title="Folders">
+                    <FolderList />
+                </PanelSection>
+                
                 <PanelSection title="Settings">
                     <ButtonItem
                         layout="below"
