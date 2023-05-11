@@ -88,7 +88,7 @@ class Plugin:
         pass
 ```
 
-It's important to note that this class is not initialized a normal class, so some norms like using `__init__` won't work here. Instead, the class is statically imported on the fly before the loader adds your `_main` function to the event loop. You can see the code responsible for this [here](`https://github.com/SteamDeckHomebrew/decky-loader/blob/0c83c9a2b507567fd49803f1df3f7d9c013c971c/backend/plugin.py#L79`). Here's a snippet:
+It's important to note that this class is not initialized a normal class, so some norms like using `__init__` won't work here. Instead, the class is statically imported on the fly before the loader adds your `_main` function to the event loop. You can see the code responsible for this [here](https://github.com/SteamDeckHomebrew/decky-loader/blob/0c83c9a2b507567fd49803f1df3f7d9c013c971c/backend/plugin.py#L79). Here's a snippet:
 
 ```python
 spec = spec_from_file_location("_", self.file)
