@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os
 import re
+import shutil
 import subprocess
 
 import decky_plugin
@@ -9,6 +10,17 @@ from settings import SettingsManager
 # Useful Constants
 FP_USER_PATH = "/home/deck/.var/app/"
 ST_CONFIG_PATH = "me.kozec.syncthingtk/config/syncthing/config.xml"
+SYSTEMD_SERVICE_FILE = os.path.join(
+    decky_plugin.DECKY_PLUGIN_DIR,
+    "assets/systemd/syncthing.service")
+SYSTEMD_TARGET_DIR = os.path.join(
+    decky_plugin.DECKY_USER_HOME,
+    ".config/systemd/user/")
+
+# Load dbus env var, for systemctl
+# NOTE: Feels a bit hacky... Potential future failure point?
+os.environ["DBUS_SESSION_BUS_ADDRESS"] = \
+    f"unix:path=/run/user/{os.getuid()}/bus"
 
 # Give logger a useful alias
 LOG = decky_plugin.logger
@@ -45,6 +57,10 @@ class Plugin:
         # Load
         await self._read_st_config(self)
         await self._read_settings(self)
+
+        LOG.info(os.getcwd())
+        LOG.info(os.getuid())
+        LOG.info(os.geteuid())
 
     async def _unload(self):
         LOG.info("Stopping Decky SyncThing!")
@@ -110,9 +126,9 @@ class Plugin:
     async def isStInstalled(self):
         """Checks to see if me.kozec.syncthingtk flatpak is installed"""
 
-        command = "flatpak info me.kozec.syncthingtk"
-        output = subprocess.run(command)
-        return output.returncode == 0
+        command = "/usr/bin/flatpak info me.kozec.syncthingtk"
+        result = subprocess.run(command)
+        return result.returncode == 0
 
     async def getStHostAddr(self):
         """Gets the Syncthing GUI Address from saved config"""
@@ -123,3 +139,67 @@ class Plugin:
         """Gets the Syncthing API Key from saved config"""
 
         return self.st_apiKey
+
+    #
+    # Systemd Functions
+    #
+
+    async def getStStatus(self):
+        """Gets SyncThing's Status from systemd"""
+        # REF: https://www.freedesktop.org/software/systemd/man/systemctl.html
+
+        LOG.info('Syncthing.service systemctl query requested!')
+
+        command = ["/usr/bin/systemctl", "--user", "status", "syncthing"]
+        result = subprocess.run(command)
+        return result.returncode
+
+    async def installStSystemd(self):
+        """Installs Syncthing as as a startup service"""
+
+        # Ensure it's not already installed
+        if await self.getStStatus(self) != 4:
+            return 1
+
+        # Copy service into right place
+        shutil.copy(SYSTEMD_SERVICE_FILE, SYSTEMD_TARGET_DIR)
+
+        # Enable service
+        ret = subprocess.run(
+            ["/usr/bin/systemctl", "--user", "enable", "syncthing"])
+        if ret.returncode != 0:
+            return 1
+
+        # Start service
+        ret = subprocess.run(
+            ["/usr/bin/systemctl", "--user", "start", "syncthing"])
+        if ret.returncode != 0:
+            return 1
+
+        # We're set!
+        return 0
+
+    async def uninstallStSystemd(self):
+        """Uninstalls Syncthing as as a startup service"""
+
+        # Ensure it's actually installed
+        if await self.getStStatus(self) == 4:
+            return 1
+
+        # Enable service
+        ret = subprocess.run(
+            ["/usr/bin/systemctl", "--user", "stop", "syncthing"])
+        if ret.returncode != 0:
+            return 1
+
+        # Start service
+        ret = subprocess.run(
+            ["/usr/bin/systemctl", "--user", "disable", "syncthing"])
+        if ret.returncode != 0:
+            return 1
+
+        # Delete service
+        os.remove(os.path.join(SYSTEMD_TARGET_DIR, "syncthing.service"))
+
+        # We're set!
+        return 0

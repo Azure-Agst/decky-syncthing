@@ -58,9 +58,9 @@ You'll need Chrome for this one, as Steam uses the Chromium Embedded Framework t
 
 If working on the desk itself, your session should be exposed on `127.0.0.1:8080`. If on a remote machine, you'll need to Allow Remote CEF Debugging via Decky's developer menu, and your session will be exposed on `local-ip:8081`.
 
-In Chrome, add your session as a network target. Shortly after, you should see the list below your target populate with remote sessions. There are a few we care about:
+In Chrome, add your session as a network target. The URL to do so whould be `chrome://inspect/#devices`. Once registered, press a few buttons to update the UI and your Chrome should populate with several remote CEF sessions. There are a few we care about:
 
-- `SharedJSContext` is the context which our plugins will run. The console here is where all of your logging will be.
+- `SharedJSContext` is the context which our plugins will run. Clicking "inspect" will open up the usual devtools menu. The console here is where all of your logging will be.
 - `QuickAccess_uid*` is the context for the Quick Access Menu
 - `MainMenu_uid*` is the context for the main Steam button menu
 - `Steam Big Picture Mode` is the context for the foreground

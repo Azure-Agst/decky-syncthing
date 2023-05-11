@@ -5,8 +5,9 @@ import {
 } from "decky-frontend-lib";
 import { VFC, useEffect, useState } from "react";
 
-import { iStFolder, iStDbStatus, iFolderStatus } from "../types.d";
+import { iStFolder, iStDbStatus, iFolderStatus } from "../types";
 import { Settings } from "../utils/Settings";
+import { Backend } from "../utils/Backend";
 
 const fetchStFolders = async (): Promise<iStFolder[]> => {
     try {
@@ -44,46 +45,55 @@ const fetchStDbStatus = async (id: string): Promise<iStDbStatus> => {
 
 export const Sidebar: VFC = ({}) => {
 
+    const [stStatus, setStStatus] = useState<number>(-99)
     const [folderStatus, setFolderStatus] = useState<iFolderStatus[]>([])
 
     useEffect(() => {
 
         console.debug(`[SyncThing] Starting Query!`)
 
-        // Fetch all folders, then iterate over them
-        fetchStFolders().then(result => {
-            result.forEach((folder) => {
-                console.debug(`[SyncThing] Found folder: ${folder.label}`)
+        // Get service status from backend
+        Backend.getStStatus().then(result => {
 
-                // For each folder, get DB status
-                fetchStDbStatus(folder.id).then(result => {
-                    console.debug(`[SyncThing] ${folder.label} Status: ${result.state}`)
+            // Save status
+            setStStatus(result)
 
-                    // Now, save each folder and status in list
-                    setFolderStatus(prevFolders => [
-                        ...prevFolders,
-                        {
-                            folder: folder,
-                            status: result
-                        }
-                    ])
+            // If ok: Fetch all folders, then iterate over them
+            if (result == 0) {
+                fetchStFolders().then(result => {
+                    result.forEach((folder) => {
+                        console.debug(`[SyncThing] Found folder: ${folder.label}`)
+
+                        // For each folder, get DB status
+                        fetchStDbStatus(folder.id).then(result => {
+                            console.debug(`[SyncThing] ${folder.label} Status: ${result.state}`)
+
+                            // Now, save each folder and status in list
+                            setFolderStatus(prevFolders => [
+                                ...prevFolders,
+                                {
+                                    folder: folder,
+                                    status: result
+                                }
+                            ])
+                        })
+                    })
                 })
-            })
-        }).finally(() => {
-            console.debug(`[SyncThing] folderStatus: ${folderStatus}`)
-        })        
+            }
+        })
+
+        
     }, [])
 
-    return (
-        <div>
-            <PanelSection title="Folders">
-                {folderStatus?.map((f) => (
-                    <div>Folder: {f.folder.label} - {f.status.state}</div>
-                ))}
-            </PanelSection>
-            <PanelSection title="Panel Section">
-                <div>
-                    Hi!
+    if (stStatus == 0) {
+        return (
+            <div>
+                <PanelSection title="Folders">
+                    {folderStatus?.map((f) => (
+                        <div>Folder: {f.folder.label} - {f.status.state}</div>
+                    ))}
+                </PanelSection>
+                <PanelSection title="Settings">
                     <ButtonItem
                         layout="below"
                         onClick={() => {
@@ -91,8 +101,16 @@ export const Sidebar: VFC = ({}) => {
                             Router.Navigate("/decky-syncthing-settings")
                         }}
                     >Open Settings</ButtonItem>
-                </div>
-            </PanelSection>
+                </PanelSection>
+            </div>
+        )
+    }
+
+    return (
+        <div style={{ margin: "auto" }}>
+            <b>Loading...</b>
+            <br/>
+            (State: {stStatus})
         </div>
-    );
+    )
 };

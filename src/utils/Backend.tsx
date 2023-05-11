@@ -36,13 +36,47 @@ export class Backend {
      * SyncThing-related calls
      */
 
-    static async getStHostAddr() {
+    static async getStHostAddr(): Promise<string | {}> {
         var output = await this.callMethod("getStHostAddr")
         return output
     }
 
-    static async getStApiKey() {
+    static async getStApiKey(): Promise<string | {}> {
         var output = await this.callMethod("getStApiKey")
         return output
+    }
+
+    /*
+     * Systemd-related calls
+     */
+
+    static async getStStatus(): Promise<number> {
+        var output = await this.callMethod("getStStatus")
+        if (typeof output === 'number') 
+            return output
+        else 
+            console.warn("[SyncThing] getStStatus:", 
+                `returned ${typeof output} '${output}'`)
+        return -1
+    }
+
+    static async installStSystemd(): Promise<number> {
+        var output = await this.callMethod("installStSystemd")
+        if (typeof output === 'number') 
+            return output
+        else 
+            console.warn("[SyncThing] installStSystemd:", 
+                `returned ${typeof output} '${output}'`)
+        return -1
+    }
+
+    static async uninstallStSystemd(): Promise<number> {
+        var output = await this.callMethod("uninstallStSystemd")
+        if (typeof output === 'number') 
+            return output
+        else 
+            console.warn("[SyncThing] uninstallStSystemd:",
+                `returned ${typeof output} '${output}'`)
+        return -1
     }
 }
