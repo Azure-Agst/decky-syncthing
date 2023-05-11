@@ -95,21 +95,11 @@ export const FolderList: VFC = ({}) => {
 
     }, [])
 
-    if (!foldersLoaded) {
-        return (
-            <div style={{ margin: "auto" }}>
-                Loading...
-            </div>
-        )
-    }
+    if (!foldersLoaded)
+        return (<div>Loading...</div>)
 
-    if (folderArray.length == 0) {
-        return (
-            <div style={{ margin: "auto" }}>
-                No folders found!
-            </div>
-        )
-    }
+    if (folderArray.length == 0)
+        return (<div>No folders found!</div>)
 
     return (
         <div>
