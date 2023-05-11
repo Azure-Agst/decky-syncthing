@@ -9,6 +9,21 @@ import { ChangeEvent, VFC, useEffect, useState } from "react";
 import { iStVersion } from "../types.d";
 import { Settings } from "../utils/Settings";
 
+const fetchStVersion = async (): Promise<iStVersion> => {
+    try {
+        const result = await fetch(`http://${Settings.host}/rest/system/version`, {
+            headers: {
+                "X-API-Key": Settings.apiKey
+            }
+        })
+        if (result.status == 200) return await result.json();
+        if (result.status == 403) return Promise.reject("Bad Authorization!")
+    } catch (e) {
+        return Promise.reject(e)
+    }
+    return Promise.reject("An undocumented error has occured!");
+}
+
 export const SettingsMenu: VFC = ({}) => {
 
     // Define signals
@@ -27,22 +42,6 @@ export const SettingsMenu: VFC = ({}) => {
         Settings.host = host
         Settings.apiKey = apiKey
         Settings.saveToBackend();
-    }
-
-    // Define fetch functions
-    const fetchStVersion = async (): Promise<iStVersion> => {
-        try {
-            const result = await fetch(`http://${Settings.host}/rest/system/version`, {
-                headers: {
-                    "X-API-Key": Settings.apiKey
-                }
-            })
-            if (result.status == 200) return await result.json();
-            if (result.status == 403) return Promise.reject("Bad Authorization!")
-        } catch (e) {
-            return Promise.reject(e)
-        }
-        return Promise.reject("An undocumented error has occured!");
     }
 
     // Define Use Effect
@@ -78,7 +77,7 @@ export const SettingsMenu: VFC = ({}) => {
             </PanelSection>
             <hr/>
             <PanelSection title="SyncThing Info">
-                <div>Version: {stVersion && stVersion.longVersion}</div>
+                <div>Version: {stVersion && stVersion.version}</div>
             </PanelSection>
         </div>
     );
