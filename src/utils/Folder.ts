@@ -1,5 +1,31 @@
 import { iFolderStatus } from "../types"
 
+export const fullStatus = (data: iFolderStatus) => {
+    const statusMap = {
+        "paused": "Paused",
+        "unknown": "Unknown",
+        "unshared": "Unshared",
+        "scan-waiting": "Waiting to Scan",
+        "cleaning": "Cleaning Versions",
+        "clean-waiting": "Waiting to Clean",
+        "stopped": "Stopped",
+        "scanning": "Scanning",
+        "idle": "Up to Date",
+        "localadditions": "Local Additions",
+        "sync-waiting": "Waiting to Sync",
+        "sync-preparing": "Preparing to Sync",
+        "syncing": "Syncing",
+        "outofsync": "Out of Sync",
+        "faileditems": "Failed Items",
+        "localunencrypted": "Unexpected Items"
+    }
+
+    let status = folderStatus(data)
+    if (status in statusMap)
+        return statusMap[status]
+    return "Unknown"
+}
+
 export const folderStatus = (data: iFolderStatus) => {
     // This attempts to mimic the logic used in the official GUI, `folderStatus`
     // REF: https://github.com/syncthing/syncthing/blob/main/gui/default/syncthing/core/syncthingController.js#L917

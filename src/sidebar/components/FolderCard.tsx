@@ -4,7 +4,7 @@ import { DialogButton, showModal } from "decky-frontend-lib"
 import { iFolderStatus } from "../../types"
 import { cardDivStyle, noMargin, statusColor } from "./FolderCard.css"
 import { FolderCardModal } from "./FolderCardModal"
-import { folderStatus } from "../../utils/Folder"
+import { fullStatus } from "../../utils/Folder"
 
 export const FolderCard: VFC<{data: iFolderStatus}> = ({ data }) => {
 
@@ -23,7 +23,7 @@ export const FolderCard: VFC<{data: iFolderStatus}> = ({ data }) => {
             >
             <h3 style={noMargin}>{data.folder.label}</h3>
             <p style={noMargin}>
-                Status: <span style={statusColor(data)}>{folderStatus(data)}</span>
+                Status: <span style={statusColor(data)}>{fullStatus(data)}</span>
             </p>
         </DialogButton>
     )
