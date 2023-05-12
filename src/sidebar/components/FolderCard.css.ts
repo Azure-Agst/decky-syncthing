@@ -1,11 +1,21 @@
 import { CSSProperties } from "react"
 
-export const cardDivStyle: CSSProperties = {
+export const cardDivBase: CSSProperties = {
     color: "white",
-    backgroundColor: "#202020",
     padding: "5px 10px",
     margin: "5px 0px",
 }
+
+export const cardDivStyle = {
+    focus: {
+      ...cardDivBase,
+      backgroundColor: "#505050"
+    },
+    blur: {
+      ...cardDivBase,
+      backgroundColor: "#202020"
+    }
+  }
 
 export const noMargin: CSSProperties = {
     margin: 0

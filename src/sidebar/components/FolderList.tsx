@@ -1,3 +1,4 @@
+import { Focusable } from "decky-frontend-lib";
 import { VFC, useEffect, useState } from "react";
 
 import { FolderCard } from "./FolderCard";
@@ -22,7 +23,7 @@ const getAllFolders = async (): Promise<iFolderStatus[]> => {
     // For each folder, get db status
     for (let stFolder of stFolders) {
         var stStatus = await syncThingFetch<iStDbStatus>(
-            `/rest/stats/folder?folder=${stFolder.id}`
+            `/rest/db/status?folder=${stFolder.id}`
         )
         folderList.push({
             label: stFolder.label,
@@ -31,6 +32,13 @@ const getAllFolders = async (): Promise<iFolderStatus[]> => {
             stats: stFolderStats[stFolder.id]
         })
     }
+
+    // Sort array alphabetically by label
+    folderList.sort((a, b) => {
+        var al = a.label.toLowerCase()
+        var bl = b.label.toLowerCase()
+        return (al < bl) ? -1 : (al > bl) ? 1 : 0;
+    })
 
     // return formatted array
     return folderList
@@ -76,11 +84,11 @@ export const FolderList: VFC = ({}) => {
         return (<div>No folders found!</div>)
 
     return (
-        <div>
+        <Focusable>
             {folderArray?.map((f) => (
                 <FolderCard data={f} />
             ))}
-        </div>
+        </Focusable>
     )
 
 }

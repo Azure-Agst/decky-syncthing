@@ -1,19 +1,28 @@
-import { VFC } from "react"
-import { Focusable } from "decky-frontend-lib"
+import { VFC, useState } from "react"
+import { DialogButton, showModal } from "decky-frontend-lib"
 
 import { iFolderStatus } from "../../types"
 import { cardDivStyle, noMargin } from "./FolderCard.css"
+import { FolderCardModal } from "./FolderCardModal"
+
 
 export const FolderCard: VFC<{data: iFolderStatus}> = ({ data }) => {
+
+    const [focus, setFocus] = useState<boolean>(false);
+
+    const showDetailsModal = () => {
+        showModal(<FolderCardModal data={data} />)
+    }
+
     return (
-        <Focusable>
-            <div style={cardDivStyle}>
-                <h3 style={noMargin}>{data.folder.label}</h3>
-                <p style={noMargin}>Status: {data.dbStatus.state}</p>
-                { data.stats && 
-                    <p style={noMargin}>Last File: {data.stats.lastFile.filename}</p>
-                }
-            </div>
-        </Focusable>
+        <DialogButton 
+            style={focus ? cardDivStyle.focus : cardDivStyle.blur }
+            onGamepadFocus={() => setFocus(true)}
+            onGamepadBlur={() => setFocus(false)}
+            onClick={(_) => showDetailsModal()}
+            >
+            <h3 style={noMargin}>{data.folder.label}</h3>
+            <p style={noMargin}>Status: {data.dbStatus.state}</p>
+        </DialogButton>
     )
 }

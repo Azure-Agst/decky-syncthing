@@ -72,9 +72,11 @@ export const SettingsView: VFC = ({}) => {
                 <DialogButton
                     onClick={onParseButtonPress}
                 >Parse from SyncThing Config</DialogButton>
+                <br/>
                 <DialogButton
                     onClick={onTestButtonPress}
                 >Test Configuration</DialogButton>
+                <br/>
                 <DialogButton
                     onClick={onSaveButtonPress}
                 >Save Changes</DialogButton>
