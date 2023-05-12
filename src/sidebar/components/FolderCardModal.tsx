@@ -16,6 +16,12 @@ export const humanFileSize = (bytes: number): string => {
 }
 
 export const FolderCardModal: VFC<{data: iFolderStatus, closeModal?(): void}> = ({ data, closeModal }) => {
+
+    const errorList = (data.errors && data.errors.errors) ? data.errors.errors : [];
+    const renderErrors = errorList.length > 0;
+    console.debug(renderErrors)
+    console.debug(errorList)
+
     return (
         <ConfirmModal
             closeModal={closeModal}
@@ -32,9 +38,24 @@ export const FolderCardModal: VFC<{data: iFolderStatus, closeModal?(): void}> = 
 
             { data.stats && <br/> }
             { data.stats && <div><b>Last Scan:</b> {new Date(data.stats.lastScan).toLocaleString()}</div> }
-            { data.stats && data.stats.lastFile.filename != "" &&
-                <div><b>Last File:</b> {data.stats.lastFile.filename} @ {new Date(data.stats.lastFile.at).toLocaleString()}</div>
+            { data.stats && (
+                data.stats?.lastFile.filename != "" ?
+                    <div><b>Latest Change:</b> {data.stats.lastFile.filename} @ {new Date(data.stats.lastFile.at).toLocaleString()}</div>
+                :
+                    <div><b>Latest Change:</b> N/A</div>
+                )
             }
+
+            { renderErrors && <br/> }
+            { renderErrors && <div><b>Errors:</b></div> }
+            { renderErrors && errorList.map((e) => (
+                <div>
+                    <div>- <b>File:</b> {e.path}</div>
+                    <div style={{ paddingLeft: "12px" }}>
+                        <b>Error:</b> {e.error}
+                    </div>
+                </div>
+            ))}
 
         </ConfirmModal>
     )
