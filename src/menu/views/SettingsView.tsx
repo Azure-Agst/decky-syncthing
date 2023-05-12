@@ -10,6 +10,7 @@ import { Settings } from "../../utils/Settings";
 import { syncThingFetch } from "../../utils/Fetch";
 
 import { iStPing } from "../../types";
+import { Backend } from "../../utils/Backend";
 
 export const SettingsView: VFC = ({}) => {
 
@@ -23,6 +24,15 @@ export const SettingsView: VFC = ({}) => {
     }
     const onApiKeyChange = (e: ChangeEvent<HTMLInputElement>) => {
         setApiKey(e.target.value)
+    }
+    const onParseButtonPress = async () => {
+        try {
+            setHost((await Backend.getStHostAddr()).toString())
+            setApiKey((await Backend.getStApiKey()).toString())
+            Toaster.sendToast("Parsed from config!")
+        } catch (e) {
+            Toaster.sendToast("Error occurred while parsing!")
+        }
     }
     const onTestButtonPress = () => {
         Settings.host = host
@@ -59,6 +69,10 @@ export const SettingsView: VFC = ({}) => {
             />
 
             <PanelSectionRow>
+                <ButtonItem
+                    layout="below"
+                    onClick={onParseButtonPress}
+                >Parse from SyncThing Config</ButtonItem>
                 <ButtonItem
                     layout="below"
                     onClick={onTestButtonPress}
