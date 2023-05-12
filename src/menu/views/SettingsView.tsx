@@ -1,5 +1,5 @@
 import { 
-    TextField, ButtonItem, 
+    TextField, DialogButton, 
     PanelSectionRow, Focusable,
     quickAccessMenuClasses
 } from "decky-frontend-lib";
@@ -69,18 +69,15 @@ export const SettingsView: VFC = ({}) => {
             />
 
             <PanelSectionRow>
-                <ButtonItem
-                    layout="below"
+                <DialogButton
                     onClick={onParseButtonPress}
-                >Parse from SyncThing Config</ButtonItem>
-                <ButtonItem
-                    layout="below"
+                >Parse from SyncThing Config</DialogButton>
+                <DialogButton
                     onClick={onTestButtonPress}
-                >Test Configuration</ButtonItem>
-                <ButtonItem
-                    layout="below"
+                >Test Configuration</DialogButton>
+                <DialogButton
                     onClick={onSaveButtonPress}
-                >Save Changes</ButtonItem>
+                >Save Changes</DialogButton>
             </PanelSectionRow>
         </Focusable>
     )

@@ -1,9 +1,7 @@
 import { Focusable, Tabs } from "decky-frontend-lib";
 import { VFC, useState } from "react";
 
-import { SettingsView, VersionView } from "./views";
-
-
+import { SettingsView, VersionView, SystemdView } from "./views";
 
 export const SyncThingMenu: VFC = ({}) => {
 
@@ -23,6 +21,11 @@ export const SyncThingMenu: VFC = ({}) => {
                             title: "Settings",
                             content: <SettingsView />,
                             id: "settings"
+                        },
+                        {
+                            title: "Systemd",
+                            content: <SystemdView />,
+                            id: "systemd"
                         },
                         {
                             title: "Version",
