@@ -3,11 +3,11 @@ import {
     ServerAPI,
     staticClasses
 } from "decky-frontend-lib";
-import { FaShip } from "react-icons/fa";
 
 import { Backend } from "./utils/Backend";
 import { Settings } from "./utils/Settings";
 
+import { MenuIcon } from "./icons/MenuIcon";
 import { Sidebar } from "./sidebar/Sidebar";
 import { SyncThingMenu } from "./menu/SyncThingMenu";
 
@@ -26,7 +26,7 @@ export default definePlugin((serverApi: ServerAPI) => {
     return {
         title: <div className={staticClasses.Title}>SyncThing</div>,
         content: <Sidebar />,
-        icon: <FaShip />,
+        icon: <MenuIcon />,
         onDismount() {
             Settings.saveToBackend()
             serverApi.routerHook.removeRoute("/decky-syncthing-settings")

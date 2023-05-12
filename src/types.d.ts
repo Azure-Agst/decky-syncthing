@@ -135,7 +135,6 @@ export interface iStFolderLFile {
     deleted:  boolean;
 }
 
-
 export interface iFolderStatus {
     label: string;
     folder: iStFolder;
