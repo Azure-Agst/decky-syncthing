@@ -14,10 +14,10 @@ export const syncThingFetch = async <T>(endpoint: string): Promise<T> => {
         if (result.status == 200) return await result.json();
 
         // If unauthorized, return rejection
-        if (result.status == 403) throw new Error("Bad Authorization!");
+        if (result.status == 403) throw new Error("403: Bad Authorization!");
 
         // If not found, throw error
-        if (result.status == 404) throw new Error("Not Found!");
+        if (result.status == 404) throw new Error(`404: ${result.text}`);
 
     } catch (e) {
 

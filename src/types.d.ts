@@ -139,9 +139,22 @@ export interface iStPing {
     ping: string;
 }
 
+export interface iStFolderErr {
+    folder:  string;
+    errors:  iStFileError[];
+    page:    number;
+    perpage: number;
+}
+
+export interface iStFileError {
+    path:  string;
+    error: string;
+}
+
 export interface iFolderStatus {
     label: string;
     folder: iStFolder;
+    errors?: iStFolderErr;
     dbStatus: iStDbStatus;
     stats?: iStFolderStats;
 }

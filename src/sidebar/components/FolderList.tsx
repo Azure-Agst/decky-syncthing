@@ -6,7 +6,8 @@ import { syncThingFetch } from "../../utils/Fetch";
 
 import {
     iStFolder, iStDbStatus,
-    iStStats, iFolderStatus
+    iStStats, iFolderStatus,
+    iStFolderErr
 } from "../../types";
 
 const getAllFolders = async (): Promise<iFolderStatus[]> => {
@@ -20,17 +21,35 @@ const getAllFolders = async (): Promise<iFolderStatus[]> => {
     // Fetch all folder stats
     var stFolderStats = await syncThingFetch<iStStats>("/rest/stats/folder")
 
-    // For each folder, get db status
+    // For each folder...
     for (let stFolder of stFolders) {
+
+        // Get Database Status
         var stStatus = await syncThingFetch<iStDbStatus>(
             `/rest/db/status?folder=${stFolder.id}`
         )
-        folderList.push({
+
+        // Temp object 
+        var tempFolder = {
             label: stFolder.label,
             folder: stFolder,
-            dbStatus: stStatus,
-            stats: stFolderStats[stFolder.id]
-        })
+            dbStatus: stStatus
+        }
+
+        // if not paused, get error status
+        if (!stFolder.paused) {
+            var stErrors = await syncThingFetch<iStFolderErr>(
+                `/rest/folder/errors?folder=${stFolder.id}`
+            )
+            tempFolder['errors'] = stErrors
+        }
+
+        // If stats exist, append
+        if (stFolder.id in stFolderStats)
+            tempFolder['stats'] = stFolderStats[stFolder.id]
+
+        // Finally, push!
+        folderList.push(tempFolder)
     }
 
     // Sort array alphabetically by label
@@ -41,7 +60,6 @@ const getAllFolders = async (): Promise<iFolderStatus[]> => {
     })
 
     // return formatted array
-    console.debug(`[SyncThing] ${JSON.stringify(folderList)}`)
     return folderList
 }
 
@@ -55,7 +73,7 @@ export const FolderList: VFC = ({}) => {
             setFolderArray(result)
             setFoldersLoaded(true)
         }).catch(error => {
-            console.log(`[SyncThing] FolderList: ${error}!`)
+            console.error(`[SyncThing] FolderList: ${error}!`)
         })
     }
 
@@ -68,7 +86,7 @@ export const FolderList: VFC = ({}) => {
         // Set interval
         var loop = setInterval(() => {
             updateFolders()
-        }, 1000)
+        }, 5000)
 
         // Cleanup code / Destructor
         return () => {

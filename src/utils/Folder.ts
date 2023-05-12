@@ -19,8 +19,16 @@ export const folderStatus = (data: iFolderStatus) => {
     if (data.dbStatus.needTotalItems > 0)
         return "outofsync"
 
-    // NOTE: Skipping failed files + encrypted stuff for now
-    // TODO: Implement required functions & calls for that
+    if (data.errors.errors && data.errors.errors.length > 0)
+        return "failedfiles"
+
+    // I'm not really sure how to parse the gui's logic for this?
+    // Potentially a future failure point.
+    if (data.dbStatus.receiveOnlyTotalItems > 0) {
+        if (data.folder.type == "recieveonly")
+            return "localadditions"
+        return "localunencrypted"
+    }
 
     if (data.folder.devices.length <= 1)
         return "unshared"
