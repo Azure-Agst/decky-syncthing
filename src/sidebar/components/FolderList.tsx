@@ -41,6 +41,7 @@ const getAllFolders = async (): Promise<iFolderStatus[]> => {
     })
 
     // return formatted array
+    console.debug(`[SyncThing] ${JSON.stringify(folderList)}`)
     return folderList
 }
 
