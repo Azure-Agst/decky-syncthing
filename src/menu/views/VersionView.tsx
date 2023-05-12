@@ -39,7 +39,7 @@ export const VersionView: VFC = ({}) => {
         <div>
             <div style={titleClass}>Decky Syncthing</div>
             <div style={subheadingClass}>By: Andrew Augustine {'<me@azureagst.dev>'}</div>
-            <hr/>
+            <hr/><br/>
             <div className={quickAccessMenuClasses.PanelSectionTitle}>SyncThing Info</div>
             <div>Version: {stVersion?.version}</div>
         </div>
