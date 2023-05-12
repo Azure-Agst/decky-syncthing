@@ -6,6 +6,7 @@ import {
 
 import { Backend } from "./utils/Backend";
 import { Settings } from "./utils/Settings";
+import { Toaster } from "./utils/Toaster";
 
 import { MenuIcon } from "./icons/MenuIcon";
 import { Sidebar } from "./sidebar/Sidebar";
@@ -13,8 +14,9 @@ import { SyncThingMenu } from "./menu/SyncThingMenu";
 
 export default definePlugin((serverApi: ServerAPI) => {
 
-    // Init backend & settings
+    // Init backend, toaster, & settings
     Backend.initBackend(serverApi)
+    Toaster.initToaster(serverApi)
     Settings.loadFromBackend()
 
     // Register Menus

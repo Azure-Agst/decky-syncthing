@@ -1,62 +1,12 @@
 import { VFC, useEffect, useState } from "react";
 
 import { FolderCard } from "./FolderCard";
-import { Settings } from "../../utils/Settings";
+import { syncThingFetch } from "../../utils/Fetch";
 
 import {
     iStFolder, iStDbStatus,
     iStStats, iFolderStatus
 } from "../../types";
-
-const fetchStFolders = async (): Promise<iStFolder[]> => {
-    try {
-        const result = await fetch(`http://${Settings.host}/rest/config/folders`, {
-            headers: {
-                "X-API-Key": Settings.apiKey
-            }
-        })
-        if (result.status == 200) return await result.json();
-        if (result.status == 403) return Promise.reject("Bad Authorization!")
-    } catch (e) {
-        return Promise.reject(e)
-    }
-    return Promise.reject("An undocumented error has occured!");
-}
-
-const fetchStDbStatus = async (id: string): Promise<iStDbStatus> => {
-    try {
-        const result = await fetch(`http://${Settings.host}/rest/db/status?` + 
-        new URLSearchParams({
-            folder: id
-        }), {
-            headers: {
-                "X-API-Key": Settings.apiKey
-            }
-        })
-        if (result.status == 200) return await result.json();
-        if (result.status == 403) return Promise.reject("Bad Authorization!")
-        if (result.status == 403) return Promise.reject("Folder not found!")
-    } catch (e) {
-        return Promise.reject(e)
-    }
-    return Promise.reject("An undocumented error has occured!");
-}
-
-const fetchStStats = async (): Promise<iStStats> => {
-    try {
-        const result = await fetch(`http://${Settings.host}/rest/stats/folder`, {
-            headers: {
-                "X-API-Key": Settings.apiKey
-            }
-        })
-        if (result.status == 200) return await result.json();
-        if (result.status == 403) return Promise.reject("Bad Authorization!")
-        if (result.status == 403) return Promise.reject("Folder not found!")
-    } catch (e) {
-        return Promise.reject(e)
-    }
-    return Promise.reject("An undocumented error has occured!");
-}
 
 const getAllFolders = async (): Promise<iFolderStatus[]> => {
     try {
@@ -65,14 +15,16 @@ const getAllFolders = async (): Promise<iFolderStatus[]> => {
         var folderList: iFolderStatus[] = []
 
         // Fetch all folders
-        var stFolders = await fetchStFolders()
+        var stFolders = await syncThingFetch<iStFolder[]>("/rest/config/folders")
 
         // Fetch all folder stats
-        var stFolderStats = await fetchStStats()
+        var stFolderStats = await syncThingFetch<iStStats>("/rest/stats/folder")
 
         // For each folder, get db status
         for (let stFolder of stFolders) {
-            var stStatus = await fetchStDbStatus(stFolder.id)
+            var stStatus = await syncThingFetch<iStDbStatus>(
+                `/rest/stats/folder?folder=${stFolder.id}`
+            )
             folderList.push({
                 label: stFolder.label,
                 folder: stFolder,

@@ -135,6 +135,10 @@ export interface iStFolderLFile {
     deleted:  boolean;
 }
 
+export interface iStPing {
+    ping: string;
+}
+
 export interface iFolderStatus {
     label: string;
     folder: iStFolder;

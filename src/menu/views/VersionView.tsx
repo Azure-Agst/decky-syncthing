@@ -4,7 +4,7 @@ import {
 import { VFC, useEffect, useState } from "react";
 
 import { iStVersion } from "../../types";
-import { Settings } from "../../utils/Settings";
+import { syncThingFetch } from "../../utils/Fetch";
 
 import { titleClass, subheadingClass } from "./VersionView.css";
 
@@ -14,21 +14,6 @@ import * as pluginJson from "../../../plugin.json";
 import * as packageJson from "../../../package.json"; 
 // ^^ I know this is bad behavior but whatever -A
 
-const fetchStVersion = async (): Promise<iStVersion> => {
-    try {
-        const result = await fetch(`http://${Settings.host}/rest/system/version`, {
-            headers: {
-                "X-API-Key": Settings.apiKey
-            }
-        })
-        if (result.status == 200) return await result.json();
-        if (result.status == 403) return Promise.reject("Bad Authorization!")
-    } catch (e) {
-        return Promise.reject(e)
-    }
-    return Promise.reject("An undocumented error has occured!");
-}
-
 export const VersionView: VFC = ({}) => {
 
     // Define state
@@ -36,7 +21,7 @@ export const VersionView: VFC = ({}) => {
 
     // Define Effects
     useEffect(() => {
-        fetchStVersion().then(result => {
+        syncThingFetch<iStVersion>("/rest/system/version").then(result => {
             setStVersion(result)
         });
     })
