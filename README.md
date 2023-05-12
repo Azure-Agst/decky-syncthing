@@ -9,7 +9,9 @@ A SyncThing Frontend for Decky Loader!
 <details>
   <summary>Click to expand</summary>
 
-  ![Screenshot](./docs/images/screenie.png)
+  ![Screenshot QAM](./docs/images/screenie-QAM.png)
+  ![Screenshot Modal](./docs/images/screenie-modal.png)
+  ![Screenshot Settings](./docs/images/screenie-settings.png)
 </details>
 
 ## Development
