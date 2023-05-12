@@ -1,5 +1,5 @@
 import { VFC } from "react"
-import { Focusable, ToggleField } from "decky-frontend-lib"
+import { Focusable } from "decky-frontend-lib"
 
 import { iFolderStatus } from "../../types"
 import { cardDivStyle, noMargin } from "./FolderCard.css"

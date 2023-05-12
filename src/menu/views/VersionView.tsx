@@ -1,7 +1,12 @@
+import {
+    quickAccessMenuClasses
+} from "decky-frontend-lib";
 import { VFC, useEffect, useState } from "react";
 
 import { iStVersion } from "../../types";
 import { Settings } from "../../utils/Settings";
+
+import { titleClass, subheadingClass } from "./VersionView.css";
 
 const fetchStVersion = async (): Promise<iStVersion> => {
     try {
@@ -31,6 +36,12 @@ export const VersionView: VFC = ({}) => {
     })
 
     return(
-        <div>Version: {stVersion && stVersion.version}</div>
+        <div>
+            <div style={titleClass}>Decky Syncthing</div>
+            <div style={subheadingClass}>By: Andrew Augustine {'<me@azureagst.dev>'}</div>
+            <hr/>
+            <div className={quickAccessMenuClasses.PanelSectionTitle}>SyncThing Info</div>
+            <div>Version: {stVersion?.version}</div>
+        </div>
     )
 }

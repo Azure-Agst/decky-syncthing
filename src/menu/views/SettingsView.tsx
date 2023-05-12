@@ -1,6 +1,7 @@
 import { 
     TextField, ButtonItem, 
-    PanelSectionRow, Focusable 
+    PanelSectionRow, Focusable,
+    quickAccessMenuClasses
 } from "decky-frontend-lib";
 import { ChangeEvent, VFC, useState } from "react";
 
@@ -27,6 +28,8 @@ export const SettingsView: VFC = ({}) => {
 
     return (
         <Focusable>
+            <div className={quickAccessMenuClasses.PanelSectionTitle}>
+                SyncThing Settings</div>
             <TextField
                 label="Host"
                 description="SyncThing's IP, usually localhost"
