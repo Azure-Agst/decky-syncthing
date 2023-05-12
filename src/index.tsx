@@ -9,7 +9,7 @@ import { Backend } from "./utils/Backend";
 import { Settings } from "./utils/Settings";
 
 import { Sidebar } from "./sidebar/Sidebar";
-import { SettingsMenu } from "./menu/SettingsMenu";
+import { SyncThingMenu } from "./menu/SyncThingMenu";
 
 export default definePlugin((serverApi: ServerAPI) => {
 
@@ -18,7 +18,7 @@ export default definePlugin((serverApi: ServerAPI) => {
     Settings.loadFromBackend()
 
     // Register Menus
-    serverApi.routerHook.addRoute("/decky-syncthing-settings", SettingsMenu, {
+    serverApi.routerHook.addRoute("/decky-syncthing-settings", SyncThingMenu, {
         exact: true
     })
 

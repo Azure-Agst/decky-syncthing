@@ -1,7 +1,8 @@
 import {
     Router,
-    ButtonItem,
+    DialogButton,
     PanelSection,
+    quickAccessMenuClasses
 } from "decky-frontend-lib";
 import { VFC } from "react";
 
@@ -10,20 +11,18 @@ import { FolderList } from "../components/FolderList";
 export const SbMainView: VFC = ({}) => {
 
     return (
-        <div>
-            <PanelSection title="Folders">
-                <FolderList />
-            </PanelSection>
+        <PanelSection>
+
+            <FolderList />
+
+            <div className={quickAccessMenuClasses.PanelSectionTitle}>Settings</div>
+            <DialogButton
+                onClick={() => {
+                    Router.CloseSideMenus();
+                    Router.Navigate("/decky-syncthing-settings")
+                }}
+            >Open Settings</DialogButton>
             
-            <PanelSection title="Settings">
-                <ButtonItem
-                    layout="below"
-                    onClick={() => {
-                        Router.CloseSideMenus();
-                        Router.Navigate("/decky-syncthing-settings")
-                    }}
-                >Open Settings</ButtonItem>
-            </PanelSection>
-        </div>
+        </PanelSection>
     )
 }

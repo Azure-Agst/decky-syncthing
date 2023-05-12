@@ -1,22 +1,16 @@
-import { CSSProperties, VFC } from "react"
+import { VFC } from "react"
+import { Focusable, ToggleField } from "decky-frontend-lib"
 
 import { iFolderStatus } from "../../types"
-
-const cardDivStyle: CSSProperties = {
-    color: "white",
-    backgroundColor: "#202020",
-    padding: "5px 10px 5px 10px"
-}
-
-const noMargin: CSSProperties = {
-    margin: 0
-}
+import { cardDivStyle, noMargin } from "./FolderCard.css"
 
 export const FolderCard: VFC<{data: iFolderStatus}> = ({ data }) => {
     return (
-        <div style={cardDivStyle}>
-            <h3 style={noMargin}>{data.folder.label}</h3>
-            <p style={noMargin}>Status: {data.status.state}</p>
-        </div>
+        <Focusable>
+            <div style={cardDivStyle}>
+                <h3 style={noMargin}>{data.folder.label}</h3>
+                <p style={noMargin}>Status: {data.status.state}</p>
+            </div>
+        </Focusable>
     )
 }

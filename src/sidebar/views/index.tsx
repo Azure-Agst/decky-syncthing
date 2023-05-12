@@ -1,5 +1,3 @@
-import { SbMainView } from "./SbMainView";
-import { SbNotFoundView } from "./SbStNotFoundView";
-import { SbNotLoadedView } from "./SbStNotLoadedView";
-
-export { SbMainView, SbNotFoundView, SbNotLoadedView };
+export { SbMainView } from "./SbMainView";
+export { SbNotFoundView } from "./SbStNotFoundView";
+export { SbNotLoadedView } from "./SbStNotLoadedView";
