@@ -2,7 +2,11 @@ import { VFC, useEffect, useState } from "react";
 
 import { FolderCard } from "./FolderCard";
 import { Settings } from "../../utils/Settings";
-import { iStFolder, iStDbStatus, iFolderStatus } from "../../types";
+
+import {
+    iStFolder, iStDbStatus,
+    iStStats, iFolderStatus
+} from "../../types";
 
 const fetchStFolders = async (): Promise<iStFolder[]> => {
     try {
@@ -38,6 +42,22 @@ const fetchStDbStatus = async (id: string): Promise<iStDbStatus> => {
     return Promise.reject("An undocumented error has occured!");
 }
 
+const fetchStStats = async (): Promise<iStStats> => {
+    try {
+        const result = await fetch(`http://${Settings.host}/rest/stats/folder`, {
+            headers: {
+                "X-API-Key": Settings.apiKey
+            }
+        })
+        if (result.status == 200) return await result.json();
+        if (result.status == 403) return Promise.reject("Bad Authorization!")
+        if (result.status == 403) return Promise.reject("Folder not found!")
+    } catch (e) {
+        return Promise.reject(e)
+    }
+    return Promise.reject("An undocumented error has occured!");
+}
+
 const getAllFolders = async (): Promise<iFolderStatus[]> => {
     try {
 
@@ -47,12 +67,17 @@ const getAllFolders = async (): Promise<iFolderStatus[]> => {
         // Fetch all folders
         var stFolders = await fetchStFolders()
 
+        // Fetch all folder stats
+        var stFolderStats = await fetchStStats()
+
         // For each folder, get db status
         for (let stFolder of stFolders) {
             var stStatus = await fetchStDbStatus(stFolder.id)
             folderList.push({
+                label: stFolder.label,
                 folder: stFolder,
-                status: stStatus
+                dbStatus: stStatus,
+                stats: stFolderStats[stFolder.id]
             })
         }
 

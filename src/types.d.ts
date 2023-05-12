@@ -120,7 +120,25 @@ export interface iStDbStatus {
     watchError:                    string;
 }
 
+export interface iStStats {
+    [key: string]: iStFolderStats
+}
+
+export interface iStFolderStats {
+    lastFile: iStFolderLFile;
+    lastScan: Date;
+}
+
+export interface iStFolderLFile {
+    at:       Date;
+    filename: string;
+    deleted:  boolean;
+}
+
+
 export interface iFolderStatus {
+    label: string;
     folder: iStFolder;
-    status: iStDbStatus;
+    dbStatus: iStDbStatus;
+    stats?: iStFolderStats;
 }
