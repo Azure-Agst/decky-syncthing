@@ -19,7 +19,7 @@ export const folderStatus = (data: iFolderStatus) => {
     if (data.dbStatus.needTotalItems > 0)
         return "outofsync"
 
-    if (data.errors.errors && data.errors.errors.length > 0)
+    if (data.errors && data.errors.errors && data.errors.errors.length > 0)
         return "failedfiles"
 
     // I'm not really sure how to parse the gui's logic for this?

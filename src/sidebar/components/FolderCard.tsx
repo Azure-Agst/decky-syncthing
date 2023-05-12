@@ -2,7 +2,7 @@ import { VFC, useState } from "react"
 import { DialogButton, showModal } from "decky-frontend-lib"
 
 import { iFolderStatus } from "../../types"
-import { cardDivStyle, noMargin } from "./FolderCard.css"
+import { cardDivStyle, noMargin, statusColor } from "./FolderCard.css"
 import { FolderCardModal } from "./FolderCardModal"
 import { folderStatus } from "../../utils/Folder"
 
@@ -22,7 +22,9 @@ export const FolderCard: VFC<{data: iFolderStatus}> = ({ data }) => {
             onClick={(_) => showDetailsModal()}
             >
             <h3 style={noMargin}>{data.folder.label}</h3>
-            <p style={noMargin}>Status: {folderStatus(data)}</p>
+            <p style={noMargin}>
+                Status: <span style={statusColor(data)}>{folderStatus(data)}</span>
+            </p>
         </DialogButton>
     )
 }
