@@ -34,4 +34,12 @@ export default defineConfig({
     format: 'iife',
     exports: 'default',
   },
+
+  // ignore rootDir & IIFE issues, log everything else
+  onwarn: (warning, warn) => {
+    if (warning.code == "PLUGIN_WARNING" && warning.pluginCode == "TS6059") return;
+    if (warning.code == "MISSING_NAME_OPTION_FOR_IIFE_EXPORT") return;
+    warn(warning);
+  }
+  
 });
