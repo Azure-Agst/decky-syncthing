@@ -67,7 +67,7 @@ In Chrome, add your session as a network target. The URL to do so whould be `chr
 
 Not sure what the rest do at the moment. Anyways, here's what the JS context looks like:
 
-![CEF Debugging](https://cdn.discordapp.com/attachments/409771681771552780/1106028894617878669/image.png)
+![CEF Debugging](./docs/images/steamdeck-cef.png)
 
 ## 4.) Backend
 
