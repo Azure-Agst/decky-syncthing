@@ -1,7 +1,12 @@
 import { VFC, useEffect, useState } from "react";
 
 import { Backend } from "../utils/Backend";
-import { SbMainView, SbNotFoundView, SbNotLoadedView } from "./views";
+import { syncThingFetch } from "../utils/Fetch";
+import { 
+    SbBadConfigView, SbMainView, 
+    SbNotFoundView, SbNotLoadedView
+} from "./views";
+import { iStPing } from "../types";
 
 export const Sidebar: VFC = ({}) => {
 
@@ -11,7 +16,22 @@ export const Sidebar: VFC = ({}) => {
 
         // Get service status from backend
         Backend.getStStatus().then(result => {
-            setStStatus(result)
+
+            // If server is live...
+            if (result == 0) {
+
+                // Send a ping
+                // If we get a pong, 0 is correct!
+                // If we error out, bad config!
+                syncThingFetch<iStPing>("/rest/system/ping").then(() => {
+                    setStStatus(0)
+                }).catch(() => {
+                    setStStatus(5)
+                })
+            } else {
+                setStStatus(result)
+            }
+                
         })
  
     }, [])
@@ -27,6 +47,10 @@ export const Sidebar: VFC = ({}) => {
     // If service not found...
     if (stStatus == 4)
         return (<SbNotFoundView />)
+    
+    // If config is invalid...
+    if (stStatus == 5)
+        return (<SbBadConfigView />)
 
     // Default statement
     return (

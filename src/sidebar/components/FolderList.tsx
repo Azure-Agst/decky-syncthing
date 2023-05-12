@@ -9,36 +9,31 @@ import {
 } from "../../types";
 
 const getAllFolders = async (): Promise<iFolderStatus[]> => {
-    try {
 
-        // Prep array
-        var folderList: iFolderStatus[] = []
+    // Prep array
+    var folderList: iFolderStatus[] = []
 
-        // Fetch all folders
-        var stFolders = await syncThingFetch<iStFolder[]>("/rest/config/folders")
+    // Fetch all folders
+    var stFolders = await syncThingFetch<iStFolder[]>("/rest/config/folders")
 
-        // Fetch all folder stats
-        var stFolderStats = await syncThingFetch<iStStats>("/rest/stats/folder")
+    // Fetch all folder stats
+    var stFolderStats = await syncThingFetch<iStStats>("/rest/stats/folder")
 
-        // For each folder, get db status
-        for (let stFolder of stFolders) {
-            var stStatus = await syncThingFetch<iStDbStatus>(
-                `/rest/stats/folder?folder=${stFolder.id}`
-            )
-            folderList.push({
-                label: stFolder.label,
-                folder: stFolder,
-                dbStatus: stStatus,
-                stats: stFolderStats[stFolder.id]
-            })
-        }
-
-        // return formatted array
-        return folderList
-
-    } catch (e) {
-        return Promise.reject(e)
+    // For each folder, get db status
+    for (let stFolder of stFolders) {
+        var stStatus = await syncThingFetch<iStDbStatus>(
+            `/rest/stats/folder?folder=${stFolder.id}`
+        )
+        folderList.push({
+            label: stFolder.label,
+            folder: stFolder,
+            dbStatus: stStatus,
+            stats: stFolderStats[stFolder.id]
+        })
     }
+
+    // return formatted array
+    return folderList
 }
 
 export const FolderList: VFC = ({}) => {
@@ -50,6 +45,8 @@ export const FolderList: VFC = ({}) => {
         getAllFolders().then(result => {
             setFolderArray(result)
             setFoldersLoaded(true)
+        }).catch(error => {
+            console.log(`[SyncThing] FolderList: ${error}!`)
         })
     }
 

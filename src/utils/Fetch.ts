@@ -2,7 +2,7 @@ import { Settings } from "./Settings";
 
 export const syncThingFetch = async <T>(endpoint: string): Promise<T> => {
     try {
-        
+
         // Get request
         const result = await fetch(`http://${Settings.host}${endpoint}`, {
             headers: {
@@ -21,7 +21,7 @@ export const syncThingFetch = async <T>(endpoint: string): Promise<T> => {
 
     } catch (e) {
 
-        // Notably, CORS headers are missing from 403 Forbidden
+        // Notably, CORS headers are missing from 403 Forbidden responses
         // This causes a generic TypeError to be raised, which we can handle
         if (e instanceof TypeError && /Failed to fetch/.test(e.message))
             throw new Error("Bad Authorization!");
