@@ -86,7 +86,7 @@ export const FolderList: VFC = ({}) => {
         // Set interval
         var loop = setInterval(() => {
             updateFolders()
-        }, 5000)
+        }, 3000)
 
         // Cleanup code / Destructor
         return () => {

@@ -25,14 +25,15 @@ export const FolderCardModal: VFC<{data: iFolderStatus, closeModal?(): void}> = 
                 {data.folder.label} - <span style={statusColor(data)}>{fullStatus(data)}</span>
             </span>}>
 
+            <div>{data.dbStatus.globalFiles} files, {data.dbStatus.globalDirectories} directories, ~{humanFileSize(data.dbStatus.globalBytes)}</div>
+            <br/>
             <div><b>Folder ID:</b> {data.folder.id}</div>
             <div><b>Folder Path:</b> {data.folder.path}</div>
-            <div>{data.dbStatus.globalFiles} files, {data.dbStatus.globalDirectories} directories, ~{humanFileSize(data.dbStatus.globalBytes)}</div>
 
             { data.stats && <br/> }
-            { data.stats && <div><b>Last Scan:</b> {data.stats.lastScan.toLocaleString()}</div> }
+            { data.stats && <div><b>Last Scan:</b> {new Date(data.stats.lastScan).toLocaleString()}</div> }
             { data.stats && data.stats.lastFile.filename != "" &&
-                <div><b>Last File:</b> {data.stats.lastFile.filename} @ {data.stats.lastFile.at.toLocaleString()}</div>
+                <div><b>Last File:</b> {data.stats.lastFile.filename} @ {new Date(data.stats.lastFile.at).toLocaleString()}</div>
             }
 
         </ConfirmModal>

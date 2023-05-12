@@ -126,11 +126,11 @@ export interface iStStats {
 
 export interface iStFolderStats {
     lastFile: iStFolderLFile;
-    lastScan: Date;
+    lastScan: string;
 }
 
 export interface iStFolderLFile {
-    at:       Date;
+    at:       string;
     filename: string;
     deleted:  boolean;
 }
