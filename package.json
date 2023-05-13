@@ -1,6 +1,6 @@
 {
     "name": "decky-syncthing",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "description": "Syncthing frontend for Decky",
     "scripts": {
       "build": "shx rm -rf dist && rollup -c",
