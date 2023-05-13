@@ -1,12 +1,14 @@
-import { Router, DialogButton } from "decky-frontend-lib";
+import { Router, DialogButton, PanelSection } from "decky-frontend-lib";
 import { VFC } from "react";
+import { commonSbError } from "../../common.css";
 
 export const SbBadConfigView: VFC = ({}) => {
 
     return (
-        <div>
-            <div style={{ margin: "auto" }}>
+        <PanelSection>
+            <div style={commonSbError}>
                 SyncThing is running, but your config seems to be invalid!
+                Would you like to open Settings to fix it?
             </div>
             <DialogButton
                 onClick={() => {
@@ -14,6 +16,6 @@ export const SbBadConfigView: VFC = ({}) => {
                     Router.Navigate("/decky-syncthing-settings")
                 }}
             >Open Settings</DialogButton>
-        </div>
+        </PanelSection>
     )
 }

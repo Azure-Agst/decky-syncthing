@@ -9,6 +9,7 @@ import { syncThingFetch } from "../../utils/Fetch";
 
 import { titleClass, subheadingClass } from "./VersionView.css";
 import { commonBaseButton } from "../../common.css";
+import { readmeUrl } from "../../constants";
 
 // @ts-ignore
 import * as pluginJson from "../../../plugin.json";
@@ -37,8 +38,7 @@ export const VersionView: VFC = ({}) => {
                 <DialogButton
                     style={commonBaseButton}
                     onClick={() => {
-                        let readme = "https://github.com/Azure-Agst/decky-syncthing/blob/main/README.md#L1"
-                        window.open(`steam://openurl/${readme}`, "_blank")
+                        window.open(`steam://openurl/${readmeUrl}`, "_blank")
                     }}
                 >Open README</DialogButton>
             </div>

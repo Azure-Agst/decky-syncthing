@@ -13,3 +13,7 @@ export class CommonCss {
 export const commonBaseButton: CSSProperties = {
     margin: "5px 0px",
 }
+
+export const commonSbError: CSSProperties = {
+    textAlign: "center",
+}

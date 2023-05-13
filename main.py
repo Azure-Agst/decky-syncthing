@@ -13,9 +13,9 @@ ST_CONFIG_PATH = "me.kozec.syncthingtk/config/syncthing/config.xml"
 SYSTEMD_SERVICE_FILE = os.path.join(
     decky_plugin.DECKY_PLUGIN_DIR,
     "assets/systemd/syncthing.service")
-SYSTEMD_TARGET_DIR = os.path.join(
+SYSTEMD_TARGET_FILE = os.path.join(
     decky_plugin.DECKY_USER_HOME,
-    ".config/systemd/user/")
+    ".config/systemd/user/syncthing.service")
 
 # Load dbus env var, for systemctl
 # NOTE: Feels a bit hacky... Potential future failure point?
@@ -123,10 +123,10 @@ class Plugin:
     # SyncThing Functions
     #
 
-    async def isStInstalled(self):
+    async def isStGTKInstalled(self):
         """Checks to see if me.kozec.syncthingtk flatpak is installed"""
 
-        command = "/usr/bin/flatpak info me.kozec.syncthingtk"
+        command = ["/usr/bin/flatpak", "info", "me.kozec.syncthingtk"]
         result = subprocess.run(command)
         return result.returncode == 0
 
@@ -157,21 +157,30 @@ class Plugin:
     async def installStSystemd(self):
         """Installs Syncthing as as a startup service"""
 
+        LOG.info("Installing SyncThing.service...")
+
         # Ensure it's not already installed
         if await self.getStStatus(self) != 4:
+            LOG.error("Already installed!")
             return 1
 
-        # Copy service into right place
-        shutil.copy(SYSTEMD_SERVICE_FILE, SYSTEMD_TARGET_DIR)
+        # Copy service into right place and ensure good perms
+        LOG.info("Copying service definition into place...")
+        shutil.copy(SYSTEMD_SERVICE_FILE, SYSTEMD_TARGET_FILE)
+        os.chmod(SYSTEMD_TARGET_FILE, 0o644)
 
         # Enable service
+        LOG.info("Enabling SyncThing...")
         ret = subprocess.run(
             ["/usr/bin/systemctl", "--user", "enable", "syncthing"])
         if ret.returncode != 0:
+            LOG.error("Failed to enable SyncThing.service!")
             return 1
 
         # Start service
-        await self.startStService(self)
+        ret = await self.startStService(self)
+        if ret != 0:
+            return 1
 
         # We're set!
         return 0
@@ -179,21 +188,36 @@ class Plugin:
     async def uninstallStSystemd(self):
         """Uninstalls Syncthing as as a startup service"""
 
+        LOG.info("Uninstalling SyncThing.service...")
+
         # Ensure it's actually installed
         if await self.getStStatus(self) == 4:
+            LOG.error("Already uninstalled!")
             return 1
 
         # Stop Service
-        await self.stopStService(self)
+        ret = await self.stopStService(self)
+        if ret != 0:
+            return 1
 
         # Disable service
+        LOG.info("Disabling SyncThing...")
         ret = subprocess.run(
             ["/usr/bin/systemctl", "--user", "disable", "syncthing"])
         if ret.returncode != 0:
+            LOG.error("Failed to disable SyncThing.service!")
             return 1
 
         # Delete service
-        os.remove(os.path.join(SYSTEMD_TARGET_DIR, "syncthing.service"))
+        os.remove(SYSTEMD_TARGET_FILE)
+
+        # Reload Daemon
+        LOG.info("Reloading Systemd...")
+        ret = subprocess.run(
+            ["/usr/bin/systemctl", "--user", "daemon-reload"])
+        if ret.returncode != 0:
+            LOG.error("Failed to reload daemon!")
+            return 1
 
         # We're set!
         return 0
@@ -202,9 +226,11 @@ class Plugin:
         """Starts SyncThing Service"""
 
         # Start service
+        LOG.info("Starting SyncThing...")
         ret = subprocess.run(
             ["/usr/bin/systemctl", "--user", "start", "syncthing"])
         if ret.returncode != 0:
+            LOG.error("Failed to start SyncThing.service!")
             return 1
         return 0
 
@@ -212,8 +238,10 @@ class Plugin:
         """Stops Syncthing Service"""
 
         # Stop service
+        LOG.info("Stopping SyncThing...")
         ret = subprocess.run(
             ["/usr/bin/systemctl", "--user", "stop", "syncthing"])
         if ret.returncode != 0:
+            LOG.error("Failed to stop SyncThing.service!")
             return 1
         return 0

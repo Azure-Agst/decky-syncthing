@@ -8,6 +8,7 @@ import { VFC } from "react";
 
 import { FolderList } from "../components/FolderList";
 import { commonBaseButton } from "../../common.css";
+import { Settings } from "../../utils/Settings";
 
 export const SbMainView: VFC = ({}) => {
 
@@ -22,7 +23,7 @@ export const SbMainView: VFC = ({}) => {
             <DialogButton
                 style={commonBaseButton}
                 onClick={() => {
-                    window.open("steam://openurl/http://localhost:8384", "_blank")
+                    window.open(`steam://openurl/http://${Settings.host}`, "_blank")
                 }}
             >Open SyncThing</DialogButton>
             <DialogButton

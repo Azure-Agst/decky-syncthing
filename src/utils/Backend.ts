@@ -50,6 +50,17 @@ export class Backend {
      * Systemd-related calls
      */
 
+    static async getIsStGTKInstalled(): Promise<boolean> {
+        var output = await this.callMethod("isStGTKInstalled")
+        console.debug("[ST] gtk return", output)
+        if (typeof output === 'boolean') 
+            return output
+        else 
+            console.warn("[SyncThing] isStInstalled:", 
+                `returned ${typeof output} '${output}'`)
+        return false
+    }
+
     static async getStStatus(): Promise<number> {
         var output = await this.callMethod("getStStatus")
         if (typeof output === 'number') 
@@ -62,6 +73,7 @@ export class Backend {
 
     static async installStSystemd(): Promise<number> {
         var output = await this.callMethod("installStSystemd")
+        console.debug("[ST] install return", output)
         if (typeof output === 'number') 
             return output
         else 
