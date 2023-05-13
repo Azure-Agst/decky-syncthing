@@ -4,13 +4,20 @@ import { Backend } from "../utils/Backend";
 import { syncThingFetch } from "../utils/Fetch";
 import { 
     SbBadConfigView, SbMainView, 
-    SbNotFoundView, SbNotLoadedView
+    SbNotFoundView, SbNotLoadedView,
+    SbNoServiceView
 } from "./views";
 import { iStPing } from "../types";
 
 export const Sidebar: VFC = ({}) => {
 
     const [stStatus, setStStatus] = useState<number>(-99)
+    const [gtkInstalled, setGtkInstalled] = useState<boolean>(false)
+
+    const findOutWhatsWrong = async () => {
+        setStStatus(await Backend.getStStatus())
+        setGtkInstalled(await Backend.getIsStGTKInstalled())
+    }
 
     useEffect(() => {
 
@@ -21,9 +28,7 @@ export const Sidebar: VFC = ({}) => {
         syncThingFetch<iStPing>("/rest/system/ping").then(() => {
             setStStatus(5)
         }).catch(() => {
-            Backend.getStStatus().then(result => {
-                setStStatus(result)     
-            })
+            findOutWhatsWrong()
         })
 
     }, [])
@@ -36,9 +41,12 @@ export const Sidebar: VFC = ({}) => {
     if (stStatus == 3)
         return (<SbNotLoadedView />)
 
-    // If service not found...
+    // If no systemd or service not found...
     if (stStatus == 4)
-        return (<SbNotFoundView />)
+        if (gtkInstalled)
+            return (<SbNoServiceView />)
+        else
+            return (<SbNotFoundView />)
     
     // If loaded successfully...
     if (stStatus == 5) 

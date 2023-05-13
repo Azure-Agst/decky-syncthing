@@ -1,4 +1,5 @@
 export { SbMainView } from "./SbMainView";
 export { SbNotFoundView } from "./SbStNotFoundView";
 export { SbNotLoadedView } from "./SbStNotLoadedView";
-export { SbBadConfigView } from "./SbBadConfigView"
+export { SbBadConfigView } from "./SbBadConfigView";
+export { SbNoServiceView } from "./SbNoServiceView";
