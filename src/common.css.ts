@@ -1,3 +1,5 @@
+import { CSSProperties } from "react"
+
 export class CommonCss {
     static customTransparent = "#fff0"
     static customSuccess = "#198754"
@@ -6,4 +8,8 @@ export class CommonCss {
     static customInfo = "#0dcaf0"
     static customDanger = "#dc3545"
     static customWarning = "#ffc107"
+}
+
+export const commonBaseButton: CSSProperties = {
+    margin: "5px 0px",
 }

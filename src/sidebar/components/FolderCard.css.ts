@@ -1,13 +1,13 @@
 import { CSSProperties } from "react"
 
-import { CommonCss } from "../../utils/Common.css"
+import { CommonCss, commonBaseButton } from "../../common.css"
 import { iFolderStatus } from "../../types"
 import { folderStatus } from "../../utils/Folder"
 
 export const cardDivBase: CSSProperties = {
+  ...commonBaseButton,
   color: "white",
   padding: "5px 10px",
-  margin: "5px 0px",
 }
 
 export const cardDivStyle = {

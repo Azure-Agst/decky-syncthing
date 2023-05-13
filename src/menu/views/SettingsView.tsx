@@ -11,6 +11,7 @@ import { syncThingFetch } from "../../utils/Fetch";
 
 import { iStPing } from "../../types";
 import { Backend } from "../../utils/Backend";
+import { commonBaseButton } from "../../common.css";
 
 export const SettingsView: VFC = ({}) => {
 
@@ -70,14 +71,15 @@ export const SettingsView: VFC = ({}) => {
 
             <PanelSectionRow>
                 <DialogButton
+                    style={commonBaseButton}
                     onClick={onParseButtonPress}
                 >Parse from SyncThing Config</DialogButton>
-                <br/>
                 <DialogButton
+                    style={commonBaseButton}
                     onClick={onTestButtonPress}
                 >Test Configuration</DialogButton>
-                <br/>
                 <DialogButton
+                    style={commonBaseButton}
                     onClick={onSaveButtonPress}
                 >Save Changes</DialogButton>
             </PanelSectionRow>
