@@ -1,0 +1,45 @@
+name: Bug Report
+description: File a bug report
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: "## Bug Report Form"
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Repo Clarification
+      description: By checking the following box, you understand that this repo is for a personal project, and not the main decky-syncthing plugin found within the Decky Store. (If you are looking for that repo by the way, you can find it [here](https://github.com/theCapypara/steamdeck-decky-syncthing).)
+      options:
+        - label: I understand that this is not the repo for the main decky-syncthing plugin.
+          required: true
+  - type: textarea
+    attributes:
+      label: Current Behavior
+      description: A concise description of what you're experiencing
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Steps to reproduce
+      description: Please include a list of steps to reproduce the behavior
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Expected Behavior
+      description: A concise description of what you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Version Information
+      description: Please include version numbers for any relevant softwares. (Such as decky-syncthing, Syncthing-GTK, SteamOS, etc.)
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Additional Context
+      description: Add any other context about the problem here.
+    validations:
+      required: false
