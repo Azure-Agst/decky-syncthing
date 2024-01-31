@@ -6,7 +6,7 @@ A SyncThing Frontend for Decky Loader!
 
 |**🚨 IMPORTANT DISCLAIMER 🚨**|
 |:-:|
-|This project is NOT the one that was merged into the official Decky Repo! This is a personal project that I made before the other decky plugin even existed, but I was lazy and never got around to actually submitting this to the Decky team. Unless you have cloned thie repo and built/installed this project yourself, you're probably looking for [this repo](https://github.com/theCapypara/steamdeck-decky-syncthing) instead.|
+|This project is NOT the one that was merged into the official Decky Repo! This is a personal project that I made before the other decky plugin even existed, but I was lazy and never got around to actually submitting this to the Decky team. Unless you have cloned this repo and built/installed this project yourself, you're probably looking for [this repo](https://github.com/theCapypara/steamdeck-decky-syncthing) instead.|
 
 ## Screenshots
 
